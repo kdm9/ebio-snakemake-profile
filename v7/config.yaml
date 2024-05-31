@@ -1,0 +1,16 @@
+cluster: "jobsubmit"
+cluster-status: "jobstatus"
+cluster-cancel: "qdel"
+jobscript: "jobscript.sh"
+jobs: 3840
+verbose: false
+#use-conda: true
+scheduler: greedy
+#conda-frontend: mamba
+rerun-incomplete: true
+keep-going: true
+max-jobs-per-second: 50
+max-status-checks-per-second: 50
+latency-wait: 300
+local-cores: 16
+printshellcmds: false

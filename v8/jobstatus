@@ -1,0 +1,42 @@
+#!/bin/bash
+
+qstat_status="$(qstat 2>/dev/null | awk '$1 == "'"$1"'"{print $5}')"
+
+#echo "qstat status $qstat_status" >&2
+
+N=50000
+if [ -z "$qstat_status" ] 
+then
+	# job has finished
+    qacct_errcode=$(tail  -n $N /var/lib/gridengine/default/common/accounting | awk 'BEGIN{FS=":"}$6=='"${1}"'{print($13)}' | tail -n 1 )
+	#echo "qacct status $qacct_errcode" >&2
+    # it can take a while for jobs to be visible to qacct. We wait for valid output from qacct before proceeding.
+    while [ -z "$qacct_errcode" ]
+    do
+        #echo "No post-job data for $1 yet" >&2
+        N=$((${N} + 50000))
+        if [ "$N" -gt 500000 ]
+        then
+            echo running
+            exit
+        fi
+        sleep 30
+        qacct_errcode=$(tail  -n $N /var/lib/gridengine/default/common/accounting | awk 'BEGIN{FS=":"}$6=='"${1}"'{print($13)}' | tail -n 1)
+    done
+	if [ "$qacct_errcode" -ne 0 ]
+	then
+        echo "job $1 failed: exit status $qacct_errcode" >&2
+		echo failed
+	else
+		echo success
+	fi
+else
+	# running or errored
+	if [[ "$qstat_status" =~ E ]]
+	then
+        echo "job $1 failed: qstat status $qstat_status" >&2
+		echo failed
+	else
+		echo running
+	fi
+fi
