@@ -1,4 +1,4 @@
-#!/ebio/abt6/kmurray/.local/share/pipx/venvs/snakemake/bin/python3
+#!/usr/bin/env python3
 import argparse
 import subprocess
 import os
