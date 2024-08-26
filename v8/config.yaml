@@ -1,15 +1,12 @@
 cluster-generic-submit-cmd: "jobsubmit"
 cluster-generic-status-cmd: "jobstatus"
-cluster-generic-status-cmd: "qdel"
+cluster-generic-cancel-cmd: "qdel"
 executor: cluster-generic
-software-deployment-method: conda
 jobscript: "jobscript.sh"
 jobs: 3840
-verbose: false
 scheduler: greedy
 rerun-incomplete: true
 max-jobs-per-second: 50
 max-status-checks-per-second: 50
 latency-wait: 300
-local-cores: 32
-printshellcmds: false
+local-cores: 64
